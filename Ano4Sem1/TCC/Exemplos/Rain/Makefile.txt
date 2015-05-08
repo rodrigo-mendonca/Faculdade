@@ -1,0 +1,25 @@
+INC_DIRS = -I/usr/openwin/include -I/usr/local/glut-3.7/include -I/usr/local/include
+LIB_DIRS = -L/usr/local/glut-3.7/lib/glut -L/usr/local/lib
+LDLIBS = -lglut -lGL -lGLU -lm -lXmu -lX11
+CFLAGS = -g  
+
+#LDLIBS= -lGL -lGLU -lm -lX11 
+#INC_DIRS = -I/usr/local/include -I/usr/X11R6/include -I/usr/local/include
+#LIB_DIRS = -L/usr/X11R6/lib -L/usr/local/lib
+
+OBJECTS= particles.o
+
+EXEC=particles
+
+all: $(EXEC)
+
+$(EXEC): $(OBJECTS)
+	c++ $(OBJECTS) ${LIB_DIRS} ${LDLIBS} -R/usr/local/lib/glut -o $(EXEC)
+
+
+particles.o: particles.cc
+	c++ ${CFLAGS} -c particles.cc  ${INC_DIRS}
+
+clean:
+	-rm *.o
+

@@ -1,0 +1,37 @@
+Implementar um programa que leia dados de um arquivo e desenhe o objeto do arquivo na tela.
+
+O arquivo de dados tera o seguinte formato:
+
+N
+
+M1
+
+x1, y1
+
+x2, y2
+
+...
+
+xm1, ym1
+
+M2
+
+x1, y1
+
+x2, y2
+
+...
+
+xm2, ym2
+
+onde N é o numero de linhas do objeto, onde cada linha será designada por
+
+M = número de pontos da linha
+
+x, y coordenadas x e y de cada ponto.
+
+ 
+
+desenvolva o seu código utilizando as coordenadas da casinha feita em sala e teste seu código com o arquivo dino.dat
+
+ 

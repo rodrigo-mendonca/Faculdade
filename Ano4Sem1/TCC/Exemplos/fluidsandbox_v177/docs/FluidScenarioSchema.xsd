@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.finalspace.org/FluidSimulation"
+	elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:fs="http://www.finalspace.org/FluidSimulation">
+
+	<element name="Scenario" type="fs:scenario"></element>
+
+	<complexType name="scenario">
+		<sequence>
+			<element name="Name" type="string" minOccurs="1"></element>
+			<element name="Gravity" type="fs:vec3ValueType" default="0.0, -9.8, 0.0"></element>
+			<element name="FluidProperties" type="fs:fluidProperties">
+			</element>
+			<element name="ActorProperties" type="fs:actorProperties"></element>
+			<element name="Variables" type="fs:variables"></element>
+			<element name="Actors" type="fs:actors"></element>
+			<element name="Fluids" type="fs:fluids"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="fluidProperties">
+		<sequence>
+			<element name="Viscosity">
+				<complexType>
+					<attribute name="value" type="fs:floatValue" default="20.0"></attribute>
+				</complexType>
+			</element>
+			<element name="Stiffness">
+				<complexType>
+					<attribute name="value" type="fs:floatValue" default="35.0"></attribute>
+				</complexType>
+			</element>
+			<element name="Damping">
+				<complexType>
+					<attribute name="value" type="fs:floatValue" default="0.0"></attribute>
+				</complexType>
+			</element>
+			<element name="ParticleDistanceFactor">
+				<complexType>
+					<attribute name="value" type="fs:floatValue" default="2.0"></attribute>
+				</complexType>
+			</element>
+			<element name="ParticleRenderFactor">
+				<complexType>
+					<attribute name="value" type="fs:floatValue" default="1.0"></attribute>
+				</complexType>
+			</element>
+			<element name="ParticleRadius">
+				<complexType>
+					<attribute name="value" type="fs:floatValue" default="0.05"></attribute>
+				</complexType>
+			</element>
+		</sequence>
+	</complexType>
+
+	<simpleType name="actorType">
+		<restriction base="string">
+			<enumeration value="static"></enumeration>
+			<enumeration value="dynamic"></enumeration>
+		</restriction>
+	</simpleType>
+
+
+	<complexType name="actors">
+		<sequence>
+			<element name="actor" type="fs:actor" maxOccurs="unbounded"
+				minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<complexType name="actor">
+		<attribute name="type" type="fs:actorType" use="required"></attribute>
+		<attribute name="primitive" type="fs:actorPrimitiveType"
+			use="required">
+		</attribute>
+		<attribute name="pos" type="fs:vec3ValueType" use="required">
+		</attribute>
+		<attribute name="size" type="fs:vec3ValueType"></attribute>
+		<attribute name="radius" type="float" use="optional"
+			default="0.5">
+		</attribute>
+		<attribute name="time" default="-1" type="int">
+			<annotation>
+				<documentation>
+					-1 = Immediatly 0 = Never > 0 = After time elapsed
+				</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="color" type="fs:vec4ValueType"
+			default="1.0, 1.0, 1.0, 1.0">
+		</attribute>
+		<attribute name="density" type="float" use="optional"
+			default="1.0">
+		</attribute>
+		<attribute name="vel" type="fs:vec3ValueType"
+			default="0.0, 0.0, 0.0">
+		</attribute>
+		<attribute name="visible" type="boolean" default="true" use="optional"></attribute>
+		<attribute name="blending" type="boolean" default="true" use="optional"></attribute>
+		<attribute name="particleDrain" type="boolean" default="false" use="optional"></attribute>
+		<attribute name="rotate" type="fs:vec3ValueType"
+			default="0.0, 0.0, 0.0">
+		</attribute>
+	</complexType>
+
+	<simpleType name="actorPrimitiveType">
+		<restriction base="string">
+			<enumeration value="cube"></enumeration>
+			<enumeration value="sphere"></enumeration>
+		</restriction>
+	</simpleType>
+
+
+	<complexType name="fluid">
+		<attribute name="type" type="fs:fluidType" use="required"></attribute>
+		<attribute name="pos" type="fs:vec3ValueType" use="required"></attribute>
+		<attribute name="vel" type="fs:vec3ValueType" default="0.0, 0.0, 0.0"></attribute>
+		<attribute name="size" type="fs:vec3ValueType" use="required"></attribute>
+		<attribute name="time" type="int" default="-1">
+			<annotation>
+				<documentation>-1 = Immediatly
+					0 = Never
+					&gt; 0 = After time elapsed</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="isEmitter" type="boolean" default="false" use="optional"></attribute>
+		<attribute name="emitterRate" type="float" default="0.0" use="optional">
+			<annotation>
+				<documentation>emit per second</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="emitterDuration" type="int" default="0" use="optional">
+			<annotation>
+				<documentation>duration in milliseconds for a emitter sequence, after this duration, the emitting waits for cooldown</documentation>
+			</annotation>
+		</attribute>
+		<attribute name="emitterCoolDown" type="int" default="0" use="optional">
+			<annotation>
+				<documentation>cooldown in milliseconds</documentation>
+			</annotation>
+		</attribute>
+	</complexType>
+
+	<complexType name="fluids">
+		<sequence>
+			<element name="Fluid" type="fs:fluid" maxOccurs="unbounded"
+				minOccurs="0"></element>
+		</sequence>
+	</complexType>
+
+	<simpleType name="fluidType">
+		<restriction base="string">
+			<enumeration value="blob"></enumeration>
+			<enumeration value="wall"></enumeration>
+			<enumeration value="drop"></enumeration>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="vec3ValueType">
+		<annotation>
+			<documentation>
+				A x,y,z vector in format 0.0, 0.0, 0.0 (whitespaces
+				are ignored)
+			</documentation>
+		</annotation>
+		<restriction base="string">
+			<whiteSpace value="collapse"></whiteSpace>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="vec4ValueType">
+		<annotation>
+			<documentation>
+				A x,y,z,w vector in format 0.0, 0.0, 0.0, 0.0 (whitespaces
+				are ignored)
+			</documentation>
+		</annotation>
+		<restriction base="string">
+			<whiteSpace value="collapse"></whiteSpace>
+		</restriction>
+	</simpleType>
+
+	<simpleType name="floatValue">
+		<restriction base="float">
+			<whiteSpace value="collapse"></whiteSpace>
+		</restriction>
+	</simpleType>
+
+	<complexType name="variables">
+		<sequence>
+			<any minOccurs="0" maxOccurs="unbounded"></any>
+		</sequence>
+	</complexType>
+
+	<complexType name="actorProperties">
+		<sequence>
+			<element name="CreatePosition" type="fs:vec3ValueType"></element>
+		</sequence>
+	</complexType>
+</schema>

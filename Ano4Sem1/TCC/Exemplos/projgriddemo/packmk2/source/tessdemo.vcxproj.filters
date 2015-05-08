@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="libmeck">
+      <UniqueIdentifier>{5e33b037-1910-4382-b56e-d6fc6dc672c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="classes">
+      <UniqueIdentifier>{c31d9cdf-b291-48ec-8df1-ec177b480f5e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="effects">
+      <UniqueIdentifier>{dda23534-e7ad-43ed-8e94-dffdf550732a}</UniqueIdentifier>
+      <Extensions>*.fx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dxmouse.cpp">
+      <Filter>libmeck</Filter>
+    </ClCompile>
+    <ClCompile Include="tools.cpp">
+      <Filter>libmeck</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>classes</Filter>
+    </ClCompile>
+    <ClCompile Include="noisemaker.cpp">
+      <Filter>classes</Filter>
+    </ClCompile>
+    <ClCompile Include="parameterhandler.cpp">
+      <Filter>classes</Filter>
+    </ClCompile>
+    <ClCompile Include="software_noisemaker.cpp">
+      <Filter>classes</Filter>
+    </ClCompile>
+    <ClCompile Include="surface.cpp">
+      <Filter>classes</Filter>
+    </ClCompile>
+    <ClCompile Include="tessdemo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dxmouse.h">
+      <Filter>libmeck</Filter>
+    </ClInclude>
+    <ClInclude Include="tools.h">
+      <Filter>libmeck</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>classes</Filter>
+    </ClInclude>
+    <ClInclude Include="noisemaker.h">
+      <Filter>classes</Filter>
+    </ClInclude>
+    <ClInclude Include="parameterhandler.h">
+      <Filter>classes</Filter>
+    </ClInclude>
+    <ClInclude Include="software_noisemaker.h">
+      <Filter>classes</Filter>
+    </ClInclude>
+    <ClInclude Include="surface.h">
+      <Filter>classes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="noise_octaves.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="noisemaker.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="noisemakermk2.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="normalmapgenerator.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="skybox.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="stuff.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="terrain_underwater.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="underwater_soft.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="v2_heightmapgen.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="v2_normalmapgen.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="water_R300.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="water_refraction.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+    <FxCompile Include="water_soft.fx">
+      <Filter>effects</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="todo.txt" />
+  </ItemGroup>
+</Project>

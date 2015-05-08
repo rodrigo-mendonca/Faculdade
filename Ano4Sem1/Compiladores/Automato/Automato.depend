@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1425498775 source:c:\dropbox\automato\main.cpp
+	<stdio.h>
+
+1426015000 source:c:\dropbox\testesc\automato\main.cpp
+	<stdio.h>
+	<stdlib.h>
+

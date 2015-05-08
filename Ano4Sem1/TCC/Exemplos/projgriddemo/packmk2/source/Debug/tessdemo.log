@@ -1,0 +1,12 @@
+﻿Build started 31/03/2015 11:51:01.
+     1>Project "C:\Users\rmendonca\Downloads\TCC\projgriddemo\packmk2\source\tessdemo.vcxproj" on node 2 (Rebuild target(s)).
+     1>FxCompile:
+         C:\Program Files\Windows Kits\8.1\bin\x86\fxc.exe /nologo /E"main" /Fo "Debug\noise_octaves.cso" noise_octaves.fx 
+         failed to open file: C:\Users\rmendonca\Downloads\TCC\projgriddemo\packmk2\source\noise_octaves.fx
+         compilation failed; no code produced
+     1>C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppCommon.targets(1126,5): error MSB6006: "fxc.exe" exited with code 1.
+     1>Done Building Project "C:\Users\rmendonca\Downloads\TCC\projgriddemo\packmk2\source\tessdemo.vcxproj" (Rebuild target(s)) -- FAILED.
+
+Build FAILED.
+
+Time Elapsed 00:00:00.93

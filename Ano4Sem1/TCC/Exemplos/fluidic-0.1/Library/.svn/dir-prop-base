@@ -1,0 +1,9 @@
+K 10
+svn:ignore
+V 54
+Fluidic.lib
+Fluidic_d.idb
+Fluidic_d.lib
+fluidic_d.pdb
+
+END

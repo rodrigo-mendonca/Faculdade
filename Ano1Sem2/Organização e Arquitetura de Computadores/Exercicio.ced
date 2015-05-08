@@ -1,0 +1,47 @@
+preparos:
+	org 0 ; RETORNA PARA O INICIO DA MEMORIA
+	mov #65535,R2 ; GUARDA A ULTIMA POSSIÇÃO
+	mov #65500,R5 ; GUARDA A PRIMEIRA POSIÇÃO
+	mov #65497,R6 ; MOV O COMEÇO DA PILHA PARA OUTRA POSIÇÃO
+
+lerteclas:
+	cmp 65498,#128   ; SE AINDA NÃO TIVER DIGTADO NADA LOOP
+	bne lerteclas
+	
+	mov 65499,(R5)	 ;MOVE A TECLA DIGITADA PARA A POSICAO QUE ESTÁ NO REGISTRADOR
+	add #1,R5
+
+	mov #0,65498
+	
+	cmp 65499,#127   ; SE AINDA NÃO TIVER APERTADO ENTER LOOP
+	beq apagar	 ; continua movendo
+
+	cmp 65499,#13    ; SE AINDA NÃO TIVER APERTADO ENTER LOOP
+	bne lerteclas	 ; continua movendo
+	mov #0,65499
+apagar:
+	sub #1,R5
+	mov #0,(R5)
+
+	br  lerteclas
+Inicio:
+	mov #0,R1	 ; APAGA O R1
+	add 65500,R1	 ; ADICIONA O VALOR DA POSIÇÃO DE MEMORIA
+continua:
+	cmp R2,#65500    ; SE AINDA NÃO CHEGOU NA PRIMEIRA POSIÇÃO DE MEMORIA LOOP
+	bne mover	 ; continua movendo
+
+	mov 65535,65500	 ; MOVE O ULTIMO PARA O PRIMEIRO
+	
+	mov #65535,R2	 ; COLOCA A ULTIMA POSICAO DE MEMORIA PARA R2
+	mov R1, 65501	 ; MOVE O QUE TEM NA POSIÇÃO DE MEMORIA DO R1 PARA OUTRA POSICAO
+	mov #0,R1	 ; ZERA O R1
+	add 65500,R1	 ; ADICIONA O VALOR DA POSIÇÃO DE MEMORIA
+
+
+	br  continua
+mover:
+	sub #1,R2	 ; RETIRA 1 DE R2
+	mov (R2),1(R2)	 ; MOVE A LETRA DE R2 PARA R2 MAIS 1
+
+	br  continua	

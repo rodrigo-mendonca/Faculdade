@@ -1,0 +1,46 @@
+1. Como multiprogramação acelera a execução de programas mesmo em uma única máquina com um apenas 1 processador?
+
+ - Ela faz dar a impressão de que N programas estao rodando ao mesmo tempo, 
+divide e gerencia a memoria processando "pouco a pouco" cada um, e otimizando, como por exemplo, processar um programa x 
+enquanto um u espera por I/O.
+
+
+> 2. Explique o que significa FLOPS, e determine quantos FLOPS equivale 10 PFLOPS.
+- Significa operações de ponto flutuante por segundo, é uma medida de desempenho de um computador.
+10PFLOPS (PETA FLOPS) equivalem 10^15 FLOPS
+
+> 3. Descreva a taxonomia de Dumcom.
+uma classificação mais nova para abranger as  arquiteturais mais recentes.
+Nesta taxonomia mantem a ideia  da taxonomia de Flynn porem divide as arquiteturas em
+síncronas e assíncronas.
+
+bom ler -> http://repositorio.uniceub.br/bitstream/123456789/3244/2/20016332.pdf
+
+
+> 4. Consulte o website www.top500.org e encontre todos os computadores brasileiros. Além disso, determine a finalidade de cada um deles.
+
+124° CIMATEC01
+A prioridade é o estudo e aprimoramento da tecnologia chamada Full Waveform Inversion (FWI) para o processamento de dados sísmicos 3D e 4D de dimensões industriais pela Universidade Federal do Rio Grande do Norte (UFRN). A metodologia FWI está sendo utilizada na otimização de atividades de óleo e gás no mundo. 
+
+228° Grifo04
+Instalado na Petrobras, Ele é usado para simular, com imagens, a exploração de petróleo na região do pré-sal. Além disso, ele roda um software que faz simulações sísmicas – algo necessário para explorar o óleo em regiões de aguas profundas. 
+
+281° Tup
+ nstalado no Instituto Nacional de Pesquisas Espaciais (Inpe) Ele é usado para simular mudanças climáticas e, claro, ajudar na previsão do tempo.
+
+459° Grifo06
+Mesmo que o Grifo04
+
+
+
+> 5. Descubra quais são os 3 primeiros colocados do top500 e qual a finalidade de cada um.
+
+1° - China - Tianhe-2
+O computador foi desenvolvido pela Universidade Nacional de Tecnologia de Defesa, 
+O supercomputador vem sendo usado nos projetos de prioridade do país, como energia, biociência, controle da poluição e projeto de ferrovia de alta velocidade. também para fins científicos.
+
+2° EUA - TITAN 
+ construído pelo Laboratório Nacional de Oak Ridge, pesquisas cientificas
+
+3° EUA - Sequoia 
+desenvolvido pela IBM, utilizado para simulações de armas nucleares.

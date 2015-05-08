@@ -1,0 +1,2 @@
+1-Escolha o automato que deseja simular 1 ou 2.
+2-Digite a entrada e precione enter.

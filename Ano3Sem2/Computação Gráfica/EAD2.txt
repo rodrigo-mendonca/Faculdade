@@ -1,0 +1,9 @@
+A técnica de clipping é uma técnica importante em computação gráfica. Nesta atividade voce deverá:
+
+1) Descrever o que é a técnica de Clipping.
+
+2) Descrever um pseudo-código de um algoritmo de clipping.
+
+3) Mostrar um exemplo do algoritmo em funcionamento.
+
+4) Mostrar como o clipping é utilizado no openGL

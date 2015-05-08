@@ -1,0 +1,9 @@
+K 10
+svn:ignore
+V 39
+Fluidic
+TestFluidic
+Fluidic.ncb
+*.user
+
+END

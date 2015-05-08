@@ -1,0 +1,3 @@
+Usar o arquivo de dados, cuja descrição esta na mesma pasta e implementar o algoritmo de gradiente descendente para classificar os dados em um dos tres vinhos. Utilizar a regularização em sua implementação.
+
+Entregar um relatório descrevendo o que foi feito e quais foram os parâmetros encontrados. Indicar no relatório os dados de inicialização utilizados e o número de interações executadas. Colocar em anexo o código implementado.

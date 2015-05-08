@@ -1,0 +1,27 @@
+- Desenvolvimento de uma aplicação utilizando a plataforma de hardware ARDUINO e o ambiente de software Python
+
+- Conforme atividades sugere-se:
+
+1. levantamento de exemplos de aplicações
+
+2. proposta de trabalho a ser desenvolvido
+
+3. Definição das datas dos entregáveis (artigo, programa e im plementação do hardware)
+
+Datas dos entregáveis:
+
+1. Nome dos participantes dos grupos - até 30/08/2012
+
+grupos podem ser os de PI ou livre, sendo no máximo 4 participantes
+
+2. Definição do projeto a ser realizado - até 03/09/2012
+
+3. Apresentação de prévia do trabalho - código e detalhes do hardware do projeto - até 24/09/2012
+
+apresentar proposta em ppt na aula.
+
+4. Testes do cenário proposto - dias 12 e 19/11/2012
+
+a sequencia da apresentação dos grupos será feita por sorteio
+
+5. Entrega final: 26/11/2012
