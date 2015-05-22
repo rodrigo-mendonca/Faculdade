@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -l nodes=4:ppn=1
+#PBS -l mem=400mb
+#PBS -l walltime=0:30:00
+#PBS -j oe
+
+export PATH=$PATH:/project/cs/titanium/b/temp/citris-upc/stable/gcc/runtime/inst/bin
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/mill/lib
+export GASNET_GEXEC_CMD="/usr/bin/gexec -p none"
+export GASNET_SPAWNFN=C
+export GASNET_CSPAWN_CMD="gexec -n %N %C"
+cd $PBS_O_WORKDIR
+NPROCS=`wc -l < $PBS_NODEFILE`
+
+upcrun -np $NPROCS ./knap-gm
+
