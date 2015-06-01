@@ -343,14 +343,14 @@ void Anel(){
 
 void Bully(){
 
-	int lider = 0;
+	int lider = Mpisize - 1;
 	int area = 0,i = 0;
 	int parar = 0;
 	PTC ptc,recvptc;
 
 	while(!parar){
 		if(rank == lider){
-			printf("%d - %s\n",rank,"Esperando Pedido");
+			printf("%d - %s\n",rank,"Lider");
 			recvptc = Recv();
 			//printf("%s%s\n","Recebeu - ",recvptc.msg);
 
@@ -376,7 +376,7 @@ void Bully(){
 				printf("%d -> %s -> %d\n",recvptc.rank,"Liberar",rank);
 			}
 
-			//if(i == Mpisize-1)
+			if(i == Mpisize-1)
 				parar = 1;
 		}
 
@@ -387,12 +387,30 @@ void Bully(){
 
 			recvptc = RecvTimeOut(1);
 
-			if(recvptc.rank == -1)
-				printf("%s\n","Time Out!");
+			if(recvptc.rank == -1){
+				printf("%s\n"," Lider Time Out!");
+
+				for (int i = rank+1; i < Mpisize; i++)
+				{
+					ptc.msg = "Votacao";
+					Send(ptc,i);
+				}
+			}
+
+			if(strcmp(recvptc.msg, "Votacao") == 0){
+				printf("%d - Iniciar Votacao",rank);
+
+				lider = max(rank,recvptc.rank);
+
+				for (int i = rank+1; i < Mpisize; i++)
+				{
+					ptc.msg = "Votacao";
+					Send(ptc,i);
+				}
+			}
 
 			if(strcmp(recvptc.msg, "Pode") == 0)
 				area = 1;
-
 
 			if(area == 1){
 				printf("%d - %s\n",rank,"Area Critica");
