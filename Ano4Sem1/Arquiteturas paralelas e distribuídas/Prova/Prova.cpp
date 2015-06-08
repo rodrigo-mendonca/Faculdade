@@ -4,7 +4,8 @@
 #include <time.h>
 #include <string.h>
 
-// mpirun -np 5 ./Ola
+// Como compilar?
+// mpirun -np 5 ./Prova [NumerodoExercicio] [Menssagem]
 
 #define min(a,b) \
    ({ __typeof__ (a) _a = (a); \
@@ -16,7 +17,6 @@
        __typeof__ (b) _b = (b); \
      _a > _b ? _a : _b; })
 
-void Algoritmo(char);
 char *VectorList(int *);
 
 void Lamport(char*);
@@ -24,7 +24,8 @@ void LamportVetor(char *);
 void Centralizado();
 void Anel();
 void Bully();
-
+void AnelLider();
+void GeneraisBizantinos();
 
 MPI_Status stat;
 int rank,Mpisize,repet = 2;
@@ -73,7 +74,6 @@ int main (int argc, char *argv[])
 			Centralizado();
 			break;
 		case 4:
-			Algoritmo('c');
 			break;
 		case 5:
 			Anel();
@@ -82,10 +82,10 @@ int main (int argc, char *argv[])
 			Bully();
 			break;
 		case 7:
-			Algoritmo('c');
+			AnelLider();
 			break;
 		case 8:
-			Algoritmo('c');
+			GeneraisBizantinos();
 			break;
 		case 9:
 			return 0;
@@ -94,25 +94,6 @@ int main (int argc, char *argv[])
 	MPI_Finalize();
 }
 
-void Algoritmo(char escolha){
-	int msg,source,dest,tag;
-
-	int i;
-
-	msg=666;dest=rank+1;tag=0;
-	
-	if(rank<Mpisize-1){
-		MPI_Send(&msg,1,MPI_INT,dest,tag,MPI_COMM_WORLD);
-		printf("%c - Processo %d enviou %d para o processo %d, Total:%d\n",escolha, rank,msg,dest,Mpisize);
-		
-	}
-
-	source=rank-1;tag=0;
-	if(rank>0){
-		MPI_Recv(&msg,1,MPI_INT,source,tag,MPI_COMM_WORLD,&stat);
-		printf("%c - Processo %d recebeu %d do processo %d Total:%d \n",escolha,rank,msg,source,Mpisize);
-	}
-}
 
 int RandI(int Seed){
 	srand(time(NULL));
@@ -135,15 +116,20 @@ PTC Recv(){
 	return recvptc;
 }
 
-PTC RecvTimeOut(int Time){
+PTC RecvTimeOut(int Time,int source){
 	MPI_Request request;
 	PTC recvptc;
 	recvptc.rank = -1;
+	strcpy(recvptc.msg, "");
 
-	MPI_Irecv(&recvptc,1,mpi_ptc_type,MPI_ANY_SOURCE,0,MPI_COMM_WORLD,&request);
+	if(source == -1)
+		source = MPI_ANY_SOURCE;
+
+	MPI_Irecv(&recvptc,1,mpi_ptc_type,source,0,MPI_COMM_WORLD,&request);
     time_t now = time(NULL);
     while(time(NULL) < now + Time){
         int flag = 0;
+
         MPI_Test(&request, &flag, &stat);
         if(flag){
             recvptc.rank = stat.MPI_SOURCE;
@@ -153,7 +139,9 @@ PTC RecvTimeOut(int Time){
 
 	return recvptc;
 }
-
+/*
+Passa de um processo para o outro, gravando cada envio no tempo e enviando para o proximo
+*/
 void Lamport(char *tmsg){
 	PTC ptc,recvptc;
 
@@ -186,6 +174,10 @@ void Lamport(char *tmsg){
 		printf("Time:%3d Msg: %s Fr:%d To:%d\n",ptc.timestamp,ptc.msg,rank,dest);
 	}
 }
+
+/*
+Grava no vetor o tempo de cada processo separado
+*/
 
 void LamportVetor(char *tmsg){
 	int i,j;
@@ -244,6 +236,10 @@ char *VectorList(int *List){
 	strcat(retorno, ")");
 	return retorno;
 }
+
+/*
+Pede acesso ao lider que eh o processo zero, cada processo so pede uma vez e o lider da permissao n= numeros de processos -1
+*/
 
 void Centralizado(){
 
@@ -305,6 +301,10 @@ void Centralizado(){
 	}
 }
 
+/*
+Faz "repet" giros, quando o processo eh dono do token ele acessa a area critica
+*/
+
 void Anel(){
 	int token = 0,i = 0,dest;
 	int parar = 0;
@@ -340,11 +340,14 @@ void Anel(){
 		parar = 0;
 	}
 }
-
+/*
+O maior processo comeco como lider e libera a area critica n=numero total de processos -1
+Depois que terminar o lider cai, obrigando os outros a fazer a votacao, onde o maior sera o ganhador, entao o processo repete a primeira parte
+*/
 void Bully(){
 
 	int lider = Mpisize - 1;
-	int area = 0,i = 0;
+	int area = -1,i = 0;
 	int parar = 0;
 	PTC ptc,recvptc;
 
@@ -356,7 +359,7 @@ void Bully(){
 
 			if(strcmp(recvptc.msg, "Acesso") == 0){
 				//printf("%s - %d\n","Pedido",recvptc.rank);
-				if(area	== 0){
+				if(area	== -1){
 					strcpy(ptc.msg, "Pode");
 
 					printf("%d -> %s -> %d\n",rank,"Pode",recvptc.rank);
@@ -372,12 +375,13 @@ void Bully(){
 			}
 
 			if(strcmp(recvptc.msg, "Liberar") == 0){
-				area = 0;
+				area = -1;
 				printf("%d -> %s -> %d\n",recvptc.rank,"Liberar",rank);
 			}
 
-			if(i == Mpisize-1)
+			if(i == Mpisize-1){
 				parar = 1;
+			}
 		}
 
 		if(rank != lider){
@@ -385,40 +389,116 @@ void Bully(){
 			printf("%d - %s\n",rank,"Pedido");
 			Send(&ptc,lider);
 
-			recvptc = RecvTimeOut(1);
-
+			recvptc = RecvTimeOut(5,lider);
+			
 			if(recvptc.rank == -1){
-				printf("%s\n"," Lider Time Out!");
-
+				int desistir = 0;
+				printf("%d - Lider %d %s\n",rank,lider,"Time Out!");
+				lider = -1;
+				
 				for (int i = rank+1; i < Mpisize; i++)
 				{
-					ptc.msg = "Votacao";
-					Send(ptc,i);
+					strcpy(ptc.msg, "Votacao");
+					Send(&ptc,i);
 				}
+
+				while(!desistir){
+					
+					int timeout = 1;
+
+					recvptc = RecvTimeOut(5,-1);
+					
+					if(recvptc.rank == -1){
+						//lider = rank;
+						printf("%d - %s\n",rank,"Parou de esperar resposta de votacao");
+						lider = rank;
+						strcpy(ptc.msg, "Lider");
+						for (int i = 0; i < Mpisize; i++)
+						{
+							Send(&ptc,i);
+						}
+						desistir = 1;
+					}
+
+					if(strcmp(recvptc.msg, "Aqui") == 0){
+						if(recvptc.rank > rank)
+							desistir = 1;
+					}
+
+					if(strcmp(recvptc.msg, "Votacao") == 0){
+						printf("%d - Iniciar Votacao\n",rank);
+						//lider = max(rank,recvptc.rank);
+
+						strcpy(ptc.msg, "Aqui");
+						Send(&ptc,recvptc.rank);
+					}
+				}
+				
 			}
 
-			if(strcmp(recvptc.msg, "Votacao") == 0){
-				printf("%d - Iniciar Votacao",rank);
-
-				lider = max(rank,recvptc.rank);
-
-				for (int i = rank+1; i < Mpisize; i++)
-				{
-					ptc.msg = "Votacao";
-					Send(ptc,i);
+			while(lider == -1){
+				printf("%s - %d\n","Esperando lider",rank);
+				recvptc = Recv();
+				if(strcmp(recvptc.msg, "Lider") == 0){
+					lider = recvptc.rank;
+					printf("%d - %s - %d\n",rank,"Novo Lider",lider);
 				}
 			}
 
 			if(strcmp(recvptc.msg, "Pode") == 0)
-				area = 1;
+				area = rank;
 
-			if(area == 1){
+			if(area == rank){
 				printf("%d - %s\n",rank,"Area Critica");
 				strcpy(ptc.msg, "Liberar");
-				
+				area = -1;
 				Send(&ptc,lider);
-				parar = 1;
+			}
+		}
+
+		if(lider == 0)
+			parar = 1;
+	}
+}
+
+void AnelLider(){
+	int lider = Mpisize-1, i = 0,dest;
+	int parar = 0,confirma = 0;
+	PTC ptc,recvptc;
+
+	for (i = 0; i < repet; ++i)
+	{
+		while(!parar){
+			dest = rank + 1;
+			while(!confirma && rank == lider){
+				strcpy(ptc.msg, "Passar");
+
+				if(dest == Mpisize)
+					dest = 0;
+
+				printf("%d -> %d\n",rank,dest);
+				Send(&ptc,dest);
+
+				recvptc = RecvTimeOut(5,dest);
+
+				if(recvptc.rank == -1)
+					dest = dest + 1;
+
+				if(strcmp(recvptc.msg, "Aqui") == 0)
+					lider = dest;
+			}
+
+			if(rank != 3){
+				recvptc = Recv();
+				printf("%d <- %d\n",rank,recvptc.rank);
+				lider = rank;
+				strcpy(ptc.msg, "Aqui");
+				Send(&ptc,recvptc.rank);
 			}
 		}
 	}
+}
+
+void GeneraisBizantinos(){
+
 }
