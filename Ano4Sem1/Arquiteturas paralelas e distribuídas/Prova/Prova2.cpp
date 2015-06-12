@@ -82,7 +82,10 @@ int main (int argc, char *argv[])
 			Centralizado();
 			break;
 		case 4:
+<<<<<<< HEAD
 			Distribuido();
+=======
+>>>>>>> e3128c62acefa1d11db161bec491ef046fee5fa4
 			break;
 		case 5:
 			Anel();
@@ -310,6 +313,7 @@ void Centralizado(){
 	}
 }
 
+<<<<<<< HEAD
 void Distribuido(){
 
 	int area = 0, i = 0;
@@ -409,6 +413,12 @@ int valida_distribuido(int *access_vetor)
 /*
 Faz "repet" giros, quando o processo eh dono do token ele acessa a area critica
 */
+=======
+/*
+Faz "repet" giros, quando o processo eh dono do token ele acessa a area critica
+*/
+
+>>>>>>> e3128c62acefa1d11db161bec491ef046fee5fa4
 void Anel(){
 	int token = 0,i = 0,dest;
 	int parar = 0;
@@ -503,6 +513,7 @@ void Bully(){
 				{
 					strcpy(ptc.msg, "Votacao");
 					Send(&ptc,i);
+<<<<<<< HEAD
 				}
 
 				while(!desistir){
@@ -670,6 +681,44 @@ void AnelLider(){
 				}
 			}
 
+=======
+				}
+
+				while(!desistir){
+					
+					int timeout = 1;
+
+					recvptc = RecvTimeOut(5,-1);
+					
+					if(recvptc.rank == -1){
+						//lider = rank;
+						printf("%d - %s\n",rank,"Parou de esperar resposta de votacao");
+						lider = rank;
+						strcpy(ptc.msg, "Lider");
+						for (int i = 0; i < Mpisize; i++)
+						{
+							Send(&ptc,i);
+						}
+						desistir = 1;
+					}
+
+					if(strcmp(recvptc.msg, "Aqui") == 0){
+						if(recvptc.rank > rank)
+							desistir = 1;
+					}
+
+					if(strcmp(recvptc.msg, "Votacao") == 0){
+						printf("%d - Iniciar Votacao\n",rank);
+						//lider = max(rank,recvptc.rank);
+
+						strcpy(ptc.msg, "Aqui");
+						Send(&ptc,recvptc.rank);
+					}
+				}
+				
+			}
+
+>>>>>>> e3128c62acefa1d11db161bec491ef046fee5fa4
 			while(lider == -1){
 				printf("%s - %d\n","Esperando lider",rank);
 				recvptc = Recv();
@@ -687,6 +736,50 @@ void AnelLider(){
 				strcpy(ptc.msg, "Liberar");
 				area = -1;
 				Send(&ptc,lider);
+<<<<<<< HEAD
+=======
+			}
+		}
+
+		if(lider == 0)
+			parar = 1;
+	}
+}
+
+void AnelLider(){
+	int lider = Mpisize-1, i = 0,dest;
+	int parar = 0,confirma = 0;
+	PTC ptc,recvptc;
+
+	for (i = 0; i < repet; ++i)
+	{
+		while(!parar){
+			dest = rank + 1;
+			while(!confirma && rank == lider){
+				strcpy(ptc.msg, "Passar");
+
+				if(dest == Mpisize)
+					dest = 0;
+
+				printf("%d -> %d\n",rank,dest);
+				Send(&ptc,dest);
+
+				recvptc = RecvTimeOut(5,dest);
+
+				if(recvptc.rank == -1)
+					dest = dest + 1;
+
+				if(strcmp(recvptc.msg, "Aqui") == 0)
+					lider = dest;
+			}
+
+			if(rank != 3){
+				recvptc = Recv();
+				printf("%d <- %d\n",rank,recvptc.rank);
+				lider = rank;
+				strcpy(ptc.msg, "Aqui");
+				Send(&ptc,recvptc.rank);
+>>>>>>> e3128c62acefa1d11db161bec491ef046fee5fa4
 			}
 		}
 
