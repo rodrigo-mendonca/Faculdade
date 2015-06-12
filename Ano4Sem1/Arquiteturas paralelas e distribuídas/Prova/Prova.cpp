@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
+#include <stddef.h>
 
 // Como compilar?
 // mpirun -np 5 ./Prova [NumerodoExercicio] [Menssagem]
@@ -18,10 +19,12 @@
      _a > _b ? _a : _b; })
 
 char *VectorList(int *);
+int valida_distribuido(int *);
 
 void Lamport(char*);
 void LamportVetor(char *);
 void Centralizado();
+void Distribuido();
 void Anel();
 void Bully();
 void AnelLider();
@@ -36,7 +39,10 @@ typedef struct _Ptc
 	int rank;
 	int timestamp;
 	int timestamplist[10];
+	int maxrank;
+	int id;
 } PTC;
+
 MPI_Datatype mpi_ptc_type;
 
 int main (int argc, char *argv[])
@@ -50,14 +56,16 @@ int main (int argc, char *argv[])
 	MPI_Comm_rank(MPI_COMM_WORLD,&rank);
 	MPI_Comm_size(MPI_COMM_WORLD,&Mpisize);
 
-	const int nitems=4;
-    int blocklengths[nitems] = {10,1,1,10};
-    MPI_Datatype types[nitems] = {MPI_CHARACTER,MPI_INT,MPI_INT,MPI_INT};
+	const int nitems=6;
+    int blocklengths[nitems] = {10,1,1,10,1,1};
+    MPI_Datatype types[nitems] = {MPI_CHARACTER,MPI_INT,MPI_INT,MPI_INT,MPI_INT,MPI_INT};
     MPI_Aint     offsets[nitems];
     offsets[0] = offsetof(PTC, msg);
     offsets[1] = offsetof(PTC, rank);
     offsets[2] = offsetof(PTC, timestamp);
     offsets[3] = offsetof(PTC, timestamplist);
+    offsets[4] = offsetof(PTC, maxrank);
+    offsets[5] = offsetof(PTC, id);
 
     MPI_Type_create_struct(nitems, blocklengths, offsets, types, &mpi_ptc_type);
     MPI_Type_commit(&mpi_ptc_type);
@@ -74,6 +82,7 @@ int main (int argc, char *argv[])
 			Centralizado();
 			break;
 		case 4:
+			Distribuido();
 			break;
 		case 5:
 			Anel();
@@ -301,10 +310,105 @@ void Centralizado(){
 	}
 }
 
+void Distribuido(){
+
+	int area = 0, i = 0;
+	int parar = 0;
+	PTC ptc,recvptc;
+	int pode_acessar[Mpisize];
+	
+	for (i = 0; i < Mpisize; i++)
+		if (i==rank)
+			pode_acessar[i] = 1;
+		else
+			pode_acessar[i] = 0;
+
+
+	ptc.rank = rank;
+	ptc.timestamp = rank ; // por conveniencia sera usado o proprio rank como timestamp
+	strcpy(ptc.msg,"Pode");
+
+	PTC resp;
+	resp.rank = rank;
+	
+	for (i = 0; i < Mpisize; i++)
+			if (i != rank)
+				Send(&ptc, i);
+
+	while(!valida_distribuido(pode_acessar)){
+	
+		for (i = 0; i < Mpisize; i++)
+			if (i != rank)
+			{
+				recvptc = RecvTimeOut(5, i);
+				if (recvptc.rank != -1){
+					printf("%i recebeu '%s' de %i\n", rank, recvptc.msg, i);
+					if (strcmp(recvptc.msg,"Pode\n"))
+					{	
+						 if (recvptc.timestamp <= ptc.timestamp)
+						 {
+
+						 	strcpy(resp.msg,"Sim");
+
+						 	PTC aux;
+						 	Send(&resp, recvptc.rank);
+						 	while(1){
+								aux = RecvTimeOut(1, recvptc.rank );
+								if (aux.rank == recvptc.rank && strcmp(aux.msg,"Ok"))
+								{
+									break;
+								}
+							}
+							printf("%d -> liberou acesso para  ->  %d\n",recvptc.rank, rank );
+							pode_acessar[recvptc.rank] = 1;
+						  	Send(&resp, recvptc.rank);
+						  }
+						  else
+						  { 
+						 	strcpy(resp.msg,"Nao");
+							Send(&resp, recvptc.rank);
+						  }
+						
+					}	
+					else 
+					{
+						if (strcmp(recvptc.msg,"Sim\n")  || strcmp(recvptc.msg,"Ok\n") )
+						{
+							printf("%d -> liberou acesso para  ->  %d\n",recvptc.rank, rank );
+							pode_acessar[recvptc.rank] = 1;
+						}
+					}
+				}
+					
+			}
+
+	}
+
+	//***** AREA CRITICA ***********//
+	printf("%d - %s\n",rank,"Area Critica");
+	/// KABOOOOOM //
+
+
+	strcpy(ptc.msg, "Ok");
+	for (i = 0; i < Mpisize; i++)
+	{
+		if (i != rank)
+			Send(&resp, recvptc.rank);
+	}
+}
+
+int valida_distribuido(int *access_vetor)
+{
+	for (int i = 0; i < Mpisize; i++)
+		if (access_vetor[i]==0)
+			return 0;
+
+	return	1;
+}
+
 /*
 Faz "repet" giros, quando o processo eh dono do token ele acessa a area critica
 */
-
 void Anel(){
 	int token = 0,i = 0,dest;
 	int parar = 0;
@@ -345,7 +449,6 @@ O maior processo comeco como lider e libera a area critica n=numero total de pro
 Depois que terminar o lider cai, obrigando os outros a fazer a votacao, onde o maior sera o ganhador, entao o processo repete a primeira parte
 */
 void Bully(){
-
 	int lider = Mpisize - 1;
 	int area = -1,i = 0;
 	int parar = 0;
@@ -403,13 +506,9 @@ void Bully(){
 				}
 
 				while(!desistir){
-					
-					int timeout = 1;
-
 					recvptc = RecvTimeOut(5,-1);
 					
 					if(recvptc.rank == -1){
-						//lider = rank;
 						printf("%d - %s\n",rank,"Parou de esperar resposta de votacao");
 						lider = rank;
 						strcpy(ptc.msg, "Lider");
@@ -427,13 +526,11 @@ void Bully(){
 
 					if(strcmp(recvptc.msg, "Votacao") == 0){
 						printf("%d - Iniciar Votacao\n",rank);
-						//lider = max(rank,recvptc.rank);
 
 						strcpy(ptc.msg, "Aqui");
 						Send(&ptc,recvptc.rank);
 					}
 				}
-				
 			}
 
 			while(lider == -1){
@@ -456,45 +553,146 @@ void Bully(){
 			}
 		}
 
-		if(lider == 0)
+		if(lider == 0){
 			parar = 1;
+			printf("%s\n","So existe um processo!\nConcluido!");
+		}
 	}
 }
 
 void AnelLider(){
-	int lider = Mpisize-1, i = 0,dest;
-	int parar = 0,confirma = 0;
+	int lider = Mpisize - 1;
+	int area = -1,i = 0;
+	int parar = 0;
 	PTC ptc,recvptc;
+	ptc.maxrank = 0;
 
-	for (i = 0; i < repet; ++i)
-	{
-		while(!parar){
-			dest = rank + 1;
-			while(!confirma && rank == lider){
-				strcpy(ptc.msg, "Passar");
+	while(!parar){
+		if(rank == lider){
+			printf("%d - %s\n",rank,"Lider");
+			recvptc = Recv();
+			//printf("%s%s\n","Recebeu - ",recvptc.msg);
 
-				if(dest == Mpisize)
-					dest = 0;
+			if(strcmp(recvptc.msg, "Acesso") == 0){
+				//printf("%s - %d\n","Pedido",recvptc.rank);
+				if(area	== -1){
+					strcpy(ptc.msg, "Pode");
 
-				printf("%d -> %d\n",rank,dest);
-				Send(&ptc,dest);
-
-				recvptc = RecvTimeOut(5,dest);
-
-				if(recvptc.rank == -1)
-					dest = dest + 1;
-
-				if(strcmp(recvptc.msg, "Aqui") == 0)
-					lider = dest;
+					printf("%d -> %s -> %d\n",rank,"Pode",recvptc.rank);
+					Send(&ptc,recvptc.rank);
+					area = recvptc.rank;
+					i++;
+				}
+				else{
+					strcpy(ptc.msg, "Nao");
+					printf("%d -> %s -> %d\n",rank,"Nao",recvptc.rank);
+					Send(&ptc,recvptc.rank);
+				}
 			}
 
-			if(rank != 3){
+			if(strcmp(recvptc.msg, "Liberar") == 0){
+				area = -1;
+				printf("%d -> %s -> %d\n",recvptc.rank,"Liberar",rank);
+			}
+
+			if(i == Mpisize-1){
+				parar = 1;
+			}
+		}
+
+		if(rank != lider){
+			strcpy(ptc.msg, "Acesso");
+			printf("%d - %s\n",rank,"Pedido");
+			Send(&ptc,lider);
+
+			recvptc = RecvTimeOut(5,lider);
+			
+			if(recvptc.rank == -1){
+				int desistir = 0;
+				int dest = rank + 1;
+				printf("%d - Lider %d %s\n",rank,lider,"Time Out!");
+				lider = -1;
+				
+				while(!desistir){
+					if(dest == Mpisize)
+						dest = 0;
+
+					ptc.id = rank;
+					ptc.maxrank = max(ptc.maxrank,rank);
+					strcpy(ptc.msg, "Votacao");
+					Send(&ptc,dest);
+
+					recvptc = RecvTimeOut(5,dest);
+
+					if(recvptc.rank == -1)
+						dest++;
+
+					if(recvptc.rank != -1){
+						printf("%d - %s - %d\n",rank,"Enviou para ",dest);
+						desistir = 1;
+					}
+					desistir = 1;
+				}
+
+				desistir = 0;
+				while(!desistir){
+					recvptc = Recv();
+
+					if(strcmp(recvptc.msg, "Votacao") == 0){
+						printf("%d - Passa Votacao\n",rank);
+						ptc.maxrank = max(recvptc.maxrank,rank);
+
+						if(recvptc.id == rank){
+							desistir = 1;
+							lider = recvptc.maxrank;
+						}
+						else{
+							dest = rank + 1;
+							while(!desistir){
+								if(dest == Mpisize)
+									dest = 0;
+
+								ptc.maxrank = max(ptc.maxrank,rank);
+								strcpy(ptc.msg, "Votacao");
+								Send(&ptc,dest);
+
+								recvptc = RecvTimeOut(5,dest);
+
+								if(recvptc.rank == -1)
+									dest++;
+
+								if(recvptc.rank != -1)
+									desistir = 1;
+
+							}
+						}
+					}
+				}
+			}
+
+			while(lider == -1){
+				printf("%s - %d\n","Esperando lider",rank);
 				recvptc = Recv();
-				printf("%d <- %d\n",rank,recvptc.rank);
-				lider = rank;
-				strcpy(ptc.msg, "Aqui");
-				Send(&ptc,recvptc.rank);
+				if(strcmp(recvptc.msg, "Lider") == 0){
+					lider = recvptc.rank;
+					printf("%d - %s - %d\n",rank,"Novo Lider",lider);
+				}
 			}
+
+			if(strcmp(recvptc.msg, "Pode") == 0)
+				area = rank;
+
+			if(area == rank){
+				printf("%d - %s\n",rank,"Area Critica");
+				strcpy(ptc.msg, "Liberar");
+				area = -1;
+				Send(&ptc,lider);
+			}
+		}
+
+		if(lider == 0){
+			parar = 1;
+			printf("%s\n","So existe um processo!\nConcluido!");
 		}
 	}
 }
