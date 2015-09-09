@@ -1,0 +1,9 @@
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\SOMFrutas.exe.config
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\SOMFrutas.exe
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\SOMFrutas.pdb
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.csprojResolveAssemblyReference.cache
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.exe
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.pdb
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\Food.txt
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.PrintForm.resources
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.csproj.GenerateResource.Cache
