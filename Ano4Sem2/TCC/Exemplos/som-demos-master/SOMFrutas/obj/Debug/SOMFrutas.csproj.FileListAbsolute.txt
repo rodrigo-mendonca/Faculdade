@@ -7,3 +7,12 @@ E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFruta
 E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\Food.txt
 E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.PrintForm.resources
 E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.csproj.GenerateResource.Cache
+C:\Users\rmendonca\Documents\GitHub\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\SOMFrutas.exe.config
+C:\Users\rmendonca\Documents\GitHub\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.exe
+C:\Users\rmendonca\Documents\GitHub\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.pdb
+C:\Users\rmendonca\Documents\GitHub\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\Food.txt
+C:\Users\rmendonca\Documents\GitHub\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\SOMFrutas.exe
+C:\Users\rmendonca\Documents\GitHub\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\SOMFrutas.pdb
+C:\Users\rmendonca\Documents\GitHub\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.csprojResolveAssemblyReference.cache
+C:\Users\rmendonca\Documents\GitHub\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.PrintForm.resources
+C:\Users\rmendonca\Documents\GitHub\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.csproj.GenerateResource.Cache
