@@ -19,7 +19,7 @@ public class Map
 
     static void Main(string[] args)
     {
-        Map oMap = new Map(3, 300, "Food.txt");
+        Map oMap = new Map(3, 10, "Food.txt");
 
 
         PrintForm oForm = new PrintForm();
@@ -117,7 +117,7 @@ public class Map
             double[] inputs = new double[dimensions];
 
             for (int i = 0; i < dimensions; i++)
-                inputs[i] = double.Parse(line[i + 1]);
+                inputs[i] = double.Parse(line[i + 1].Replace('.',','));
             
             patterns.Add(inputs);
         }
@@ -162,7 +162,7 @@ public class Map
 
                 TrainingSet.Remove(pattern);
             }
-            //Console.WriteLine(currentError.ToString("0.0000000"));
+            Console.WriteLine(currentError.ToString("0.0000000"));
         }
     }
 
