@@ -7,3 +7,8 @@ E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFruta
 E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\Food.txt
 E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.PrintForm.resources
 E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.csproj.GenerateResource.Cache
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\MySOM.dll
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\MySOM.pdb
+F:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\bin\Debug\SOMFrutas.exe.config
+F:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.exe
+F:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\SOMFrutas\obj\Debug\SOMFrutas.pdb

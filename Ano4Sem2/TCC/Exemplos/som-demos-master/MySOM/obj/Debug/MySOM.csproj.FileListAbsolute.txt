@@ -1,0 +1,5 @@
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\MySOM\obj\Debug\MySOM.csprojResolveAssemblyReference.cache
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\MySOM\bin\Debug\MySOM.dll
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\MySOM\bin\Debug\MySOM.pdb
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\MySOM\obj\Debug\MySOM.dll
+E:\Faculdade\Ano4Sem2\TCC\Exemplos\som-demos-master\MySOM\obj\Debug\MySOM.pdb
